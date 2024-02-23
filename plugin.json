@@ -3,9 +3,9 @@
   "TriggerKeywords": [
     "deep"
   ],
-  "Name": "Wox.Plugin.DeepL",
+  "Name": "DeepL translator",
   "Description": "DeepL translation plugin for Wox",
-  "Author": "Wox Launcher",
+  "Author": "Wox-launcher",
   "Version": "0.0.1",
   "MinWoxVersion": "2.0.0",
   "Runtime": "Nodejs",
