@@ -1,3 +1,3 @@
-# Wox.Plugin.Template.Nodejs
+# Wox.Plugin.DeepL
 
-Plugin template for nodejs plugin
+DeepL plugin for Wox

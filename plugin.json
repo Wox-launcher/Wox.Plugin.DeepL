@@ -1,15 +1,15 @@
 {
-  "Id": "[Id]",
+  "Id": "09ea2847-929c-440a-aa2c-9b74bcaae69f",
   "TriggerKeywords": [
-    "[Trigger Keyword]"
+    "deep"
   ],
-  "Name": "[Name]",
-  "Description": "[Description]",
-  "Author": "[Author Name]",
+  "Name": "Wox.Plugin.DeepL",
+  "Description": "DeepL translation plugin for Wox",
+  "Author": "Wox Launcher",
   "Version": "0.0.1",
   "MinWoxVersion": "2.0.0",
-  "Runtime": "[Runtime]",
-  "Website": "[Website]",
+  "Runtime": "Nodejs",
+  "Website": "https://github.com/Wox-launcher/Wox.Plugin.DeepL",
   "Entry": "index.js",
   "Icon": "relative:images/app.png",
   "SupportedOS": [
