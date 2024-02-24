@@ -1,5 +1,6 @@
-import type { Plugin, PluginInitContext, PublicAPI, Query, Result } from "@wox-launcher/wox-plugin"
+import { Plugin, PluginInitContext, PublicAPI, Query, RefreshableResult, Result } from "@wox-launcher/wox-plugin"
 import * as deepl from "deepl-node"
+import clipboard from "clipboardy"
 
 let api: PublicAPI
 let translator: deepl.Translator
@@ -52,7 +53,7 @@ export const plugin: Plugin = {
       targetLang = "en-US"
     }
 
-    const result = await translator.translateText(query.Search, null, <deepl.TargetLanguageCode>targetLang)
+    let translateResult = ""
 
     return [
       {
@@ -63,13 +64,22 @@ export const plugin: Plugin = {
         },
         Preview: {
           PreviewType: "text",
-          PreviewData: result.text,
+          PreviewData: "Translating...",
           PreviewProperties: {}
+        },
+        RefreshInterval: 200,
+        OnRefresh: async (result: RefreshableResult) => {
+          const newResult = await translator.translateText(query.Search, null, <deepl.TargetLanguageCode>targetLang)
+          translateResult = newResult.text
+          result.Preview.PreviewData = translateResult
+          result.RefreshInterval = 0 // stop refreshing
+          return result
         },
         Actions: [
           {
             Name: "Copy",
             Action: async () => {
+              await clipboard.write(translateResult)
             }
           }
         ]

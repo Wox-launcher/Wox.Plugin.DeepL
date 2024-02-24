@@ -1,12 +1,12 @@
 {
   "Id": "09ea2847-929c-440a-aa2c-9b74bcaae69f",
   "TriggerKeywords": [
-    "deep"
+    "deepl"
   ],
   "Name": "DeepL translator",
   "Description": "DeepL translation plugin for Wox",
   "Author": "Wox-launcher",
-  "Version": "0.0.1",
+  "Version": "0.0.2",
   "MinWoxVersion": "2.0.0",
   "Runtime": "Nodejs",
   "Website": "https://github.com/Wox-launcher/Wox.Plugin.DeepL",
