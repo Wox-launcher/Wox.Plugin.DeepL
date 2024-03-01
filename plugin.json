@@ -16,5 +16,13 @@
     "windows",
     "linux",
     "darwin"
+  ],
+  "Features": [
+    {
+      "Name": "debounce",
+      "Params": {
+        "intervalMs": "300"
+      }
+    }
   ]
 }

@@ -1,4 +1,12 @@
-import { Plugin, PluginInitContext, PublicAPI, Query, RefreshableResult, Result } from "@wox-launcher/wox-plugin"
+import {
+  Context,
+  Plugin,
+  PluginInitParams,
+  PublicAPI,
+  Query,
+  RefreshableResult,
+  Result
+} from "@wox-launcher/wox-plugin"
 import * as deepl from "deepl-node"
 import clipboard from "clipboardy"
 
@@ -10,24 +18,24 @@ function containsChinese(str: string) {
 }
 
 export const plugin: Plugin = {
-  init: async (context: PluginInitContext) => {
-    api = context.API
+  init: async (ctx: Context, params: PluginInitParams) => {
+    api = params.API
 
-    const authKey = await api.GetSetting("key")
+    const authKey = await api.GetSetting(ctx, "key")
     if (authKey !== "") {
       translator = new deepl.Translator(authKey)
     } else {
-      await api.Log("Warning", "Please set the DeepL API key in the settings")
+      await api.Log(ctx, "Warning", "Please set the DeepL API key in the settings")
     }
 
-    await api.OnSettingChanged(async (key: string, value: string) => {
+    await api.OnSettingChanged(ctx, async (key: string, value: string) => {
       if (key === "key") {
-        await api.Log("Info", "DeepL API key changed")
+        await api.Log(ctx, "Info", "DeepL API key changed")
         translator = new deepl.Translator(value)
       }
     })
   },
-  query: async (query: Query): Promise<Result[]> => {
+  query: async (ctx: Context, query: Query): Promise<Result[]> => {
     if (query.Search === "") {
       return []
     }
