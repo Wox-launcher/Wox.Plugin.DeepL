@@ -6,7 +6,7 @@
   "Name": "DeepL translator",
   "Description": "DeepL translation plugin for Wox",
   "Author": "Wox-launcher",
-  "Version": "0.0.2",
+  "Version": "0.0.3",
   "MinWoxVersion": "2.0.0",
   "Runtime": "Nodejs",
   "Website": "https://github.com/Wox-launcher/Wox.Plugin.DeepL",
@@ -22,6 +22,19 @@
       "Name": "debounce",
       "Params": {
         "intervalMs": "300"
+      }
+    }
+  ],
+  "SettingDefinitions": [
+    {
+      "Type": "textbox",
+      "Value": {
+        "Key": "key",
+        "Label": "DeepL API Key",
+        "Tooltip": "see https://support.deepl.com/hc/en-us/articles/360020695820-API-Key-for-DeepL-s-API",
+        "Style": {
+          "Width": 500
+        }
       }
     }
   ]
