@@ -17,6 +17,89 @@ function containsChinese(str: string) {
   return /[\u4E00-\u9FA5]/.test(str)
 }
 
+function queryForInput(query: Query): Result[] {
+  let translateResult = ""
+  return [
+    {
+      Title: query.Search,
+      Icon: {
+        ImageType: "relative",
+        ImageData: "images/app.png"
+      },
+      Preview: {
+        PreviewType: "text",
+        PreviewData: "Translating...",
+        PreviewProperties: {}
+      },
+      RefreshInterval: 200,
+      OnRefresh: async (result: RefreshableResult) => {
+        let targetLang = "zh"
+        if (containsChinese(query.Search)) {
+          targetLang = "en-US"
+        }
+        const newResult = await translator.translateText(query.Search, null, <deepl.TargetLanguageCode>targetLang)
+        translateResult = newResult.text
+        result.Preview.PreviewData = translateResult
+        result.RefreshInterval = 0 // stop refreshing
+        return result
+      },
+      Actions: [
+        {
+          Name: "Copy",
+          Action: async () => {
+            await clipboard.write(translateResult)
+          }
+        }
+      ]
+    }
+  ]
+}
+
+function queryForSelection(query: Query): Result[] {
+  let startGenerate = false
+  let translateResult = ""
+  return [
+    {
+      Title: "DeepL Translate",
+      Icon: {
+        ImageType: "relative",
+        ImageData: "images/app.png"
+      },
+      Preview: {
+        PreviewType: "text",
+        PreviewData: "Enter to translate",
+        PreviewProperties: {}
+      },
+      RefreshInterval: 200,
+      OnRefresh: async (result: RefreshableResult) => {
+        if (!startGenerate) {
+          return result
+        }
+
+        let targetLang = "zh"
+        if (containsChinese(query.Selection.Text)) {
+          targetLang = "en-US"
+        }
+        const newResult = await translator.translateText(query.Selection.Text, null, <deepl.TargetLanguageCode>targetLang)
+        translateResult = newResult.text
+        result.Preview.PreviewData = translateResult
+        result.RefreshInterval = 0 // stop refreshing
+        return result
+      },
+      Actions: [
+        {
+          Name: "Start",
+          PreventHideAfterAction: true,
+          Action: async () => {
+            startGenerate = true
+          }
+        }
+      ]
+    }
+  ]
+}
+
+
 export const plugin: Plugin = {
   init: async (ctx: Context, params: PluginInitParams) => {
     api = params.API
@@ -36,9 +119,13 @@ export const plugin: Plugin = {
     })
   },
   query: async (ctx: Context, query: Query): Promise<Result[]> => {
-    if (query.Search === "") {
+    if (query.Type === "input" && query.Search === "") {
       return []
     }
+    if (query.Type === "selection" && query.Selection.Text === "") {
+      return []
+    }
+
     if (!translator) {
       return [
         {
@@ -56,42 +143,13 @@ export const plugin: Plugin = {
       ]
     }
 
-    let targetLang = "zh"
-    if (containsChinese(query.Search)) {
-      targetLang = "en-US"
+    if (query.Type === "input") {
+      return queryForInput(query)
+    }
+    if (query.Type === "selection") {
+      return queryForSelection(query)
     }
 
-    let translateResult = ""
-
-    return [
-      {
-        Title: query.Search,
-        Icon: {
-          ImageType: "relative",
-          ImageData: "images/app.png"
-        },
-        Preview: {
-          PreviewType: "text",
-          PreviewData: "Translating...",
-          PreviewProperties: {}
-        },
-        RefreshInterval: 200,
-        OnRefresh: async (result: RefreshableResult) => {
-          const newResult = await translator.translateText(query.Search, null, <deepl.TargetLanguageCode>targetLang)
-          translateResult = newResult.text
-          result.Preview.PreviewData = translateResult
-          result.RefreshInterval = 0 // stop refreshing
-          return result
-        },
-        Actions: [
-          {
-            Name: "Copy",
-            Action: async () => {
-              await clipboard.write(translateResult)
-            }
-          }
-        ]
-      }
-    ]
+    return []
   }
 }

@@ -23,6 +23,9 @@
       "Params": {
         "intervalMs": "300"
       }
+    },
+    {
+      "Name":"querySelection"
     }
   ],
   "SettingDefinitions": [
