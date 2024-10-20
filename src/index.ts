@@ -1,12 +1,4 @@
-import {
-  Context,
-  Plugin,
-  PluginInitParams,
-  PublicAPI,
-  Query,
-  RefreshableResult,
-  Result
-} from "@wox-launcher/wox-plugin"
+import { Context, Plugin, PluginInitParams, PublicAPI, Query, RefreshableResult, Result } from "@wox-launcher/wox-plugin"
 import * as deepl from "deepl-node"
 import clipboard from "clipboardy"
 
@@ -56,8 +48,8 @@ function queryForInput(query: Query): Result[] {
 }
 
 function queryForSelection(query: Query): Result[] {
-  let startGenerate = false
   let translateResult = ""
+  let translateStartTime = 0
   return [
     {
       Title: "DeepL Translate",
@@ -66,23 +58,25 @@ function queryForSelection(query: Query): Result[] {
         ImageData: "images/app.png"
       },
       Preview: {
-        PreviewType: "text",
-        PreviewData: "Enter to translate",
+        PreviewType: "markdown",
+        PreviewData: `${query.Selection.Text}`,
         PreviewProperties: {}
       },
       RefreshInterval: 200,
       OnRefresh: async (result: RefreshableResult) => {
-        if (!startGenerate) {
+        if (translateResult === "") {
+          if (translateStartTime > 0) {
+            // still translating
+            result.SubTitle = "Translating..."
+          }
           return result
         }
 
-        let targetLang = "zh"
-        if (containsChinese(query.Selection.Text)) {
-          targetLang = "en-US"
-        }
-        const newResult = await translator.translateText(query.Selection.Text, null, <deepl.TargetLanguageCode>targetLang)
-        translateResult = newResult.text
-        result.Preview.PreviewData = translateResult
+        result.SubTitle = "Translated, took " + (Date.now() - translateStartTime) + "ms"
+        result.Preview.PreviewData = `${translateResult}  
+---  
+
+${query.Selection.Text}`
         result.RefreshInterval = 0 // stop refreshing
         return result
       },
@@ -91,14 +85,20 @@ function queryForSelection(query: Query): Result[] {
           Name: "Start",
           PreventHideAfterAction: true,
           Action: async () => {
-            startGenerate = true
+            translateStartTime = Date.now()
+
+            let targetLang = "zh"
+            if (containsChinese(query.Selection.Text)) {
+              targetLang = "en-US"
+            }
+            const newResult = await translator.translateText(query.Selection.Text, null, <deepl.TargetLanguageCode>targetLang)
+            translateResult = newResult.text
           }
         }
       ]
     }
   ]
 }
-
 
 export const plugin: Plugin = {
   init: async (ctx: Context, params: PluginInitParams) => {

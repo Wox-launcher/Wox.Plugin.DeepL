@@ -6,7 +6,7 @@
   "Name": "DeepL translator",
   "Description": "DeepL translation plugin for Wox",
   "Author": "Wox-launcher",
-  "Version": "0.0.4",
+  "Version": "0.0.5",
   "MinWoxVersion": "2.0.0",
   "Runtime": "Nodejs",
   "Website": "https://github.com/Wox-launcher/Wox.Plugin.DeepL",
@@ -25,7 +25,7 @@
       }
     },
     {
-      "Name":"querySelection"
+      "Name": "querySelection"
     }
   ],
   "SettingDefinitions": [
