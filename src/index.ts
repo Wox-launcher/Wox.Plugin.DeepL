@@ -78,11 +78,20 @@ function queryForSelection(query: Query): Result[] {
 
 ${query.Selection.Text}`
         result.RefreshInterval = 0 // stop refreshing
+        result.Actions = [
+          {
+            Name: "Copy",
+            Action: async () => {
+              await clipboard.write(translateResult)
+            }
+          }
+        ]
+
         return result
       },
       Actions: [
         {
-          Name: "Start",
+          Name: "Translate",
           PreventHideAfterAction: true,
           Action: async () => {
             translateStartTime = Date.now()

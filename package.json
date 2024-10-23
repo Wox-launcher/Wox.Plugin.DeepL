@@ -24,7 +24,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@wox-launcher/wox-plugin": "^0.0.79",
+    "@wox-launcher/wox-plugin": "^0.0.81",
     "deepl-node": "^1.11.1",
     "clipboardy": "^4.0.0"
   }

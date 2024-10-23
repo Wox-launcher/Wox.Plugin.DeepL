@@ -6,7 +6,7 @@
   "Name": "DeepL translator",
   "Description": "DeepL translation plugin for Wox",
   "Author": "Wox-launcher",
-  "Version": "0.0.5",
+  "Version": "0.0.6",
   "MinWoxVersion": "2.0.0",
   "Runtime": "Nodejs",
   "Website": "https://github.com/Wox-launcher/Wox.Plugin.DeepL",
