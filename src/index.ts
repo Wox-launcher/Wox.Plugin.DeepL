@@ -1,4 +1,4 @@
-import { Context, Plugin, PluginInitParams, PublicAPI, Query, RefreshableResult, Result } from "@wox-launcher/wox-plugin"
+import { ActionContext, Context, Plugin, PluginInitParams, PublicAPI, Query, Result, UpdatableResult } from "@wox-launcher/wox-plugin"
 import * as deepl from "deepl-node"
 import clipboard from "clipboardy"
 
@@ -9,102 +9,46 @@ function containsChinese(str: string) {
   return /[\u4E00-\u9FA5]/.test(str)
 }
 
-function queryForInput(query: Query): Result[] {
-  let translateResult = ""
+function getTranslateAction(ctx: Context, txt: string) {
   return [
     {
-      Title: query.Search,
-      Icon: {
-        ImageType: "relative",
-        ImageData: "images/app.png"
-      },
-      Preview: {
-        PreviewType: "text",
-        PreviewData: "Translating...",
-        PreviewProperties: {}
-      },
-      RefreshInterval: 200,
-      OnRefresh: async (result: RefreshableResult) => {
+      Name: "Translate",
+      PreventHideAfterAction: true,
+      Action: async (actionContext: ActionContext) => {
         let targetLang = "zh"
-        if (containsChinese(query.Search)) {
+        if (containsChinese(txt)) {
           targetLang = "en-US"
         }
-        const newResult = await translator.translateText(query.Search, null, <deepl.TargetLanguageCode>targetLang)
-        translateResult = newResult.text
-        result.Preview.PreviewData = translateResult
-        result.RefreshInterval = 0 // stop refreshing
-        return result
-      },
-      Actions: [
-        {
-          Name: "Copy",
-          Action: async () => {
-            await clipboard.write(translateResult)
+
+        // give user some feedback that the translation is in progress
+        await api.UpdateResult(ctx, {
+          Id: actionContext.ResultId,
+          Preview: {
+            PreviewType: "text",
+            PreviewData: "Translating...",
+            PreviewProperties: {}
           }
-        }
-      ]
-    }
-  ]
-}
+        } as UpdatableResult)
 
-function queryForSelection(query: Query): Result[] {
-  let translateResult = ""
-  let translateStartTime = 0
-  return [
-    {
-      Title: "DeepL Translate",
-      Icon: {
-        ImageType: "relative",
-        ImageData: "images/app.png"
-      },
-      Preview: {
-        PreviewType: "markdown",
-        PreviewData: `${query.Selection.Text}`,
-        PreviewProperties: {}
-      },
-      RefreshInterval: 200,
-      OnRefresh: async (result: RefreshableResult) => {
-        if (translateResult === "") {
-          if (translateStartTime > 0) {
-            // still translating
-            result.SubTitle = "Translating..."
-          }
-          return result
-        }
+        const newResult = await translator.translateText(txt, null, <deepl.TargetLanguageCode>targetLang)
 
-        result.SubTitle = "Translated, took " + (Date.now() - translateStartTime) + "ms"
-        result.Preview.PreviewData = `${translateResult}  
----  
-
-${query.Selection.Text}`
-        result.RefreshInterval = 0 // stop refreshing
-        result.Actions = [
-          {
-            Name: "Copy",
-            Action: async () => {
-              await clipboard.write(translateResult)
+        await api.UpdateResult(ctx, {
+          Id: actionContext.ResultId,
+          Preview: {
+            PreviewType: "text",
+            PreviewData: `${newResult.text}`,
+            PreviewProperties: {}
+          },
+          Actions: [
+            {
+              Name: "Copy",
+              Action: async () => {
+                await clipboard.write(newResult.text)
+              }
             }
-          }
-        ]
-
-        return result
-      },
-      Actions: [
-        {
-          Name: "Translate",
-          PreventHideAfterAction: true,
-          Action: async () => {
-            translateStartTime = Date.now()
-
-            let targetLang = "zh"
-            if (containsChinese(query.Selection.Text)) {
-              targetLang = "en-US"
-            }
-            const newResult = await translator.translateText(query.Selection.Text, null, <deepl.TargetLanguageCode>targetLang)
-            translateResult = newResult.text
-          }
-        }
-      ]
+          ]
+        } as UpdatableResult)
+      }
     }
   ]
 }
@@ -152,12 +96,22 @@ export const plugin: Plugin = {
       ]
     }
 
-    if (query.Type === "input") {
-      return queryForInput(query)
-    }
-    if (query.Type === "selection") {
-      return queryForSelection(query)
-    }
+    const queryText = query.Type === "input" ? query.Search : query.Selection.Text
+    return [
+      {
+        Title: "DeepL Translate",
+        Icon: {
+          ImageType: "relative",
+          ImageData: "images/app.png"
+        },
+        Preview: {
+          PreviewType: "text",
+          PreviewData: "Press Enter to translate: " + queryText,
+          PreviewProperties: {}
+        },
+        Actions: getTranslateAction(ctx, queryText)
+      }
+    ]
 
     return []
   }
