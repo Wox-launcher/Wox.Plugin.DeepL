@@ -1,6 +1,5 @@
 import { ActionContext, Context, Plugin, PluginInitParams, PublicAPI, Query, Result, UpdatableResult } from "@wox-launcher/wox-plugin"
 import * as deepl from "deepl-node"
-import clipboard from "clipboardy"
 
 let api: PublicAPI
 let translator: deepl.Translator
@@ -43,7 +42,10 @@ function getTranslateAction(ctx: Context, txt: string) {
             {
               Name: "Copy",
               Action: async () => {
-                await clipboard.write(newResult.text)
+                await api.Copy(ctx, {
+                  type: "text",
+                  text: newResult.text
+                })
               }
             }
           ]
