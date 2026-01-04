@@ -8,12 +8,12 @@ function containsChinese(str: string) {
   return /[\u4E00-\u9FA5]/.test(str)
 }
 
-function getTranslateAction(ctx: Context, txt: string) {
+function getTranslateAction(_: Context, txt: string) {
   return [
     {
       Name: "Translate",
       PreventHideAfterAction: true,
-      Action: async (actionContext: ActionContext) => {
+      Action: async (ctx: Context, actionContext: ActionContext) => {
         let targetLang = "zh"
         if (containsChinese(txt)) {
           targetLang = "en-US"
@@ -66,7 +66,7 @@ export const plugin: Plugin = {
       await api.Log(ctx, "Warning", "Please set the DeepL API key in the settings")
     }
 
-    await api.OnSettingChanged(ctx, async (key: string, value: string) => {
+    await api.OnSettingChanged(ctx, async (ctx: Context, key: string, value: string) => {
       if (key === "key") {
         await api.Log(ctx, "Info", "DeepL API key changed")
         translator = new deepl.Translator(value)
