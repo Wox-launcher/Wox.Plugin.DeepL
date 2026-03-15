@@ -26,14 +26,3 @@ This plugin requires a DeepL API authentication key.
 2. Sign up or log in
 3. Create an API Free or API Pro subscription
 4. Copy your key from the DeepL account API keys page
-
-## Current behavior
-
-- Input mode format is `deepl <text>`
-- Selection mode is supported (translate selected text)
-- Translation only works between configured `Language A` and `Language B`
-- Source language is auto-detected by DeepL
-- If source is `Language A`, target is `Language B`
-- If source is `Language B`, target is `Language A`
-- If source is neither, plugin shows an unsupported-language message
-- `Language A` and `Language B` are selected from dropdown options in settings
