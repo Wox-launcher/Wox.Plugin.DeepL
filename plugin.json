@@ -3,13 +3,67 @@
   "TriggerKeywords": [
     "deepl"
   ],
-  "Name": "DeepL translator",
-  "Description": "DeepL translation plugin for Wox",
+  "Name": "i18n:plugin_name",
+  "Description": "i18n:plugin_description",
   "Author": "Wox-launcher",
-  "Version": "0.0.9",
+  "Version": "0.1.0",
   "MinWoxVersion": "2.0.0",
   "Runtime": "Nodejs",
   "Website": "https://github.com/Wox-launcher/Wox.Plugin.DeepL",
+  "I18n": {
+    "en_US": {
+      "plugin_name": "DeepL translator",
+      "plugin_description": "DeepL translation plugin for Wox",
+      "setting_api_key_label": "DeepL API Key",
+      "setting_api_key_tooltip": "Get your API key: [DeepL API Key Guide](https://support.deepl.com/hc/en-us/articles/360020695820-API-Key-for-DeepL-s-API)",
+      "setting_language_a_label": "Language A",
+      "setting_language_b_label": "Language B",
+      "setting_language_a_tooltip": "First language in the translation pair. The plugin only translates between Language A and Language B.",
+      "setting_language_b_tooltip": "Second language in the translation pair. If input is Language A it translates to B, and if input is Language B it translates to A.",
+      "result_title_translate": "DeepL Translate",
+      "action_translate": "Translate",
+      "action_translate_with_target": "Translate with target...",
+      "action_copy": "Copy",
+      "form_target_language_label": "Target language",
+      "translate_between": "{languageA} <-> {languageB}",
+      "msg_api_key_not_set": "DeepL API key not set",
+      "msg_set_api_key_in_settings": "Please set the DeepL API key in the settings",
+      "msg_invalid_language_pair": "Invalid settings: {languageA} and {languageB} are the same language family.",
+      "msg_translating": "Translating...",
+      "msg_only_pair_supported": "Detected source language \"{detectedSourceLang}\". Only {languageA} <-> {languageB} is supported.",
+      "msg_translation_failed": "Translation failed: {errorMessage}",
+      "log_set_api_key_in_settings": "Please set the DeepL API key in the settings",
+      "log_api_key_cleared": "DeepL API key cleared",
+      "log_api_key_changed": "DeepL API key changed",
+      "log_setting_changed": "{key} changed"
+    },
+    "zh_CN": {
+      "plugin_name": "DeepL 翻译",
+      "plugin_description": "DeepL翻译插件",
+      "setting_api_key_label": "DeepL API Key",
+      "setting_api_key_tooltip": "获取 API Key：[DeepL API Key 指南](https://support.deepl.com/hc/en-us/articles/360020695820-API-Key-for-DeepL-s-API)",
+      "setting_language_a_label": "语言 A",
+      "setting_language_b_label": "语言 B",
+      "setting_language_a_tooltip": "翻译语言对中的第一个语言。插件只支持在语言 A 和语言 B 之间互译。",
+      "setting_language_b_tooltip": "翻译语言对中的第二个语言。输入是语言 A 时翻译到 B，输入是语言 B 时翻译到 A。",
+      "result_title_translate": "DeepL 翻译",
+      "action_translate": "翻译",
+      "action_translate_with_target": "指定目标语言翻译...",
+      "action_copy": "复制",
+      "form_target_language_label": "目标语言",
+      "translate_between": "{languageA} <-> {languageB}",
+      "msg_api_key_not_set": "未设置 DeepL API Key",
+      "msg_set_api_key_in_settings": "请在设置中配置 DeepL API Key",
+      "msg_invalid_language_pair": "设置无效：{languageA} 和 {languageB} 属于同一语言。",
+      "msg_translating": "翻译中...",
+      "msg_only_pair_supported": "检测到源语言为 \"{detectedSourceLang}\"。仅支持 {languageA} <-> {languageB} 互译。",
+      "msg_translation_failed": "翻译失败：{errorMessage}",
+      "log_set_api_key_in_settings": "请在设置中配置 DeepL API Key",
+      "log_api_key_cleared": "DeepL API Key 已清空",
+      "log_api_key_changed": "DeepL API Key 已更新",
+      "log_setting_changed": "{key} 已更新"
+    }
+  },
   "Entry": "index.js",
   "Icon": "relative:images/app.png",
   "SupportedOS": [
@@ -27,11 +81,281 @@
       "Type": "textbox",
       "Value": {
         "Key": "key",
-        "Label": "DeepL API Key",
-        "Tooltip": "see https://support.deepl.com/hc/en-us/articles/360020695820-API-Key-for-DeepL-s-API",
+        "Label": "i18n:setting_api_key_label",
+        "Tooltip": "i18n:setting_api_key_tooltip",
         "Style": {
           "Width": 500
         }
+      }
+    },
+    {
+      "Type": "select",
+      "Value": {
+        "Key": "languageA",
+        "Label": "i18n:setting_language_a_label",
+        "Tooltip": "i18n:setting_language_a_tooltip",
+        "DefaultValue": "en-US",
+        "Options": [
+          {
+            "Label": "Bulgarian (bg)",
+            "Value": "bg"
+          },
+          {
+            "Label": "Czech (cs)",
+            "Value": "cs"
+          },
+          {
+            "Label": "Danish (da)",
+            "Value": "da"
+          },
+          {
+            "Label": "German (de)",
+            "Value": "de"
+          },
+          {
+            "Label": "Greek (el)",
+            "Value": "el"
+          },
+          {
+            "Label": "Spanish (es)",
+            "Value": "es"
+          },
+          {
+            "Label": "Estonian (et)",
+            "Value": "et"
+          },
+          {
+            "Label": "Finnish (fi)",
+            "Value": "fi"
+          },
+          {
+            "Label": "French (fr)",
+            "Value": "fr"
+          },
+          {
+            "Label": "Hungarian (hu)",
+            "Value": "hu"
+          },
+          {
+            "Label": "Indonesian (id)",
+            "Value": "id"
+          },
+          {
+            "Label": "Italian (it)",
+            "Value": "it"
+          },
+          {
+            "Label": "Japanese (ja)",
+            "Value": "ja"
+          },
+          {
+            "Label": "Korean (ko)",
+            "Value": "ko"
+          },
+          {
+            "Label": "Lithuanian (lt)",
+            "Value": "lt"
+          },
+          {
+            "Label": "Latvian (lv)",
+            "Value": "lv"
+          },
+          {
+            "Label": "Norwegian Bokmal (nb)",
+            "Value": "nb"
+          },
+          {
+            "Label": "Dutch (nl)",
+            "Value": "nl"
+          },
+          {
+            "Label": "Polish (pl)",
+            "Value": "pl"
+          },
+          {
+            "Label": "Romanian (ro)",
+            "Value": "ro"
+          },
+          {
+            "Label": "Russian (ru)",
+            "Value": "ru"
+          },
+          {
+            "Label": "Slovak (sk)",
+            "Value": "sk"
+          },
+          {
+            "Label": "Slovenian (sl)",
+            "Value": "sl"
+          },
+          {
+            "Label": "Swedish (sv)",
+            "Value": "sv"
+          },
+          {
+            "Label": "Turkish (tr)",
+            "Value": "tr"
+          },
+          {
+            "Label": "Ukrainian (uk)",
+            "Value": "uk"
+          },
+          {
+            "Label": "Chinese (zh)",
+            "Value": "zh"
+          },
+          {
+            "Label": "English (UK) (en-GB)",
+            "Value": "en-GB"
+          },
+          {
+            "Label": "English (US) (en-US)",
+            "Value": "en-US"
+          },
+          {
+            "Label": "Portuguese (Brazil) (pt-BR)",
+            "Value": "pt-BR"
+          },
+          {
+            "Label": "Portuguese (Portugal) (pt-PT)",
+            "Value": "pt-PT"
+          }
+        ]
+      }
+    },
+    {
+      "Type": "select",
+      "Value": {
+        "Key": "languageB",
+        "Label": "i18n:setting_language_b_label",
+        "Tooltip": "i18n:setting_language_b_tooltip",
+        "DefaultValue": "zh",
+        "Options": [
+          {
+            "Label": "Bulgarian (bg)",
+            "Value": "bg"
+          },
+          {
+            "Label": "Czech (cs)",
+            "Value": "cs"
+          },
+          {
+            "Label": "Danish (da)",
+            "Value": "da"
+          },
+          {
+            "Label": "German (de)",
+            "Value": "de"
+          },
+          {
+            "Label": "Greek (el)",
+            "Value": "el"
+          },
+          {
+            "Label": "Spanish (es)",
+            "Value": "es"
+          },
+          {
+            "Label": "Estonian (et)",
+            "Value": "et"
+          },
+          {
+            "Label": "Finnish (fi)",
+            "Value": "fi"
+          },
+          {
+            "Label": "French (fr)",
+            "Value": "fr"
+          },
+          {
+            "Label": "Hungarian (hu)",
+            "Value": "hu"
+          },
+          {
+            "Label": "Indonesian (id)",
+            "Value": "id"
+          },
+          {
+            "Label": "Italian (it)",
+            "Value": "it"
+          },
+          {
+            "Label": "Japanese (ja)",
+            "Value": "ja"
+          },
+          {
+            "Label": "Korean (ko)",
+            "Value": "ko"
+          },
+          {
+            "Label": "Lithuanian (lt)",
+            "Value": "lt"
+          },
+          {
+            "Label": "Latvian (lv)",
+            "Value": "lv"
+          },
+          {
+            "Label": "Norwegian Bokmal (nb)",
+            "Value": "nb"
+          },
+          {
+            "Label": "Dutch (nl)",
+            "Value": "nl"
+          },
+          {
+            "Label": "Polish (pl)",
+            "Value": "pl"
+          },
+          {
+            "Label": "Romanian (ro)",
+            "Value": "ro"
+          },
+          {
+            "Label": "Russian (ru)",
+            "Value": "ru"
+          },
+          {
+            "Label": "Slovak (sk)",
+            "Value": "sk"
+          },
+          {
+            "Label": "Slovenian (sl)",
+            "Value": "sl"
+          },
+          {
+            "Label": "Swedish (sv)",
+            "Value": "sv"
+          },
+          {
+            "Label": "Turkish (tr)",
+            "Value": "tr"
+          },
+          {
+            "Label": "Ukrainian (uk)",
+            "Value": "uk"
+          },
+          {
+            "Label": "Chinese (zh)",
+            "Value": "zh"
+          },
+          {
+            "Label": "English (UK) (en-GB)",
+            "Value": "en-GB"
+          },
+          {
+            "Label": "English (US) (en-US)",
+            "Value": "en-US"
+          },
+          {
+            "Label": "Portuguese (Brazil) (pt-BR)",
+            "Value": "pt-BR"
+          },
+          {
+            "Label": "Portuguese (Portugal) (pt-PT)",
+            "Value": "pt-PT"
+          }
+        ]
       }
     }
   ]
